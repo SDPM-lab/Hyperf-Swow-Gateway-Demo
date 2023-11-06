@@ -13,9 +13,14 @@ declare(strict_types=1);
 namespace App\Controller;
 use Hyperf\Context\ApplicationContext;
 use App\JsonRpc\ProductInterface;
+use App\JsonRpc\Product;
 
+use Hyperf\Di\Annotation\Inject;
 class IndexController extends AbstractController
 {
+    #[Inject]
+    protected ProductInterface $ProductService;
+
     public function index()
     {
         $user = $this->request->input('user', 'Hyperf');
@@ -27,11 +32,10 @@ class IndexController extends AbstractController
         ];
     }
 
-    public function products()
+    public function products(Product $service)
     {
-        $client = ApplicationContext::getContainer()->get(ProductInterface::class);
-
-        $products = $client->products();
+        // return ['code' => 200, 'data' => $this->ProductService->products()];
+        $products =  $service->products();
 
         return [
             'products'=>$products,
